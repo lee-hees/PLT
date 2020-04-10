@@ -1,0 +1,26 @@
+4주차 14_Pointer 03강의 내용중 컴파일러에 따라 수정되어야 하는 부분이 있습니다.
+영상의 첫번째 소스는 아래의 첫번째 소스를
+두번째 소스는 아래의 두번째 소스를 사용해야 합니다.
+학습에 차질 없으시기 바랍니다.
+컴파일러가 버전업(version up) 되면서, 에러가 예상되는 문장을 컴파일러 수준에서 차단하게 되었습니다.
+20200407, 서진택
+
+첫번째 소스
+#include <stdio.h>
+void main()
+{
+	const char* s = "hello";
+	printf("%p, %c, %i\r\n", s, *s, *s);
+}
+﻿
+두번째 소스
+#include <stdio.h>
+void main(){
+	const char* s = "hello";
+	int i = 0;
+	int j = 0;
+	i = *s;
+	j = *(s+1);
+	printf("%p, %c, %i\r\n", s, *s, *s);
+	printf("%i, %i\r\n", i, j);
+}
