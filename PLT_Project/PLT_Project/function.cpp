@@ -22,6 +22,8 @@ int main() // 4token
 	printf("hello %% %i\r\n", t); // %i 자리에는 정수를 표시..','이후에 %의 순서대로 작성
 	return 0;
 }
+//hello world
+//hello % 12
 
 int h(int x, int y)
 {
