@@ -41,5 +41,14 @@ int main()
 		i++;
 	}
 
+
+	int s = 0;
+	i = 1;
+	do{
+		s += i;
+		i++;
+	} while (i <= 10);
+	printf("%i\r\n", s);
+
 	return 0;
 }
