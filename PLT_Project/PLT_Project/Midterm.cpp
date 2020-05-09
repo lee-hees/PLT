@@ -13,14 +13,8 @@ void print_stud_num(char* stud_num, int* index_of_stud_num)
 	printf("%c", stud_num[*index_of_stud_num]);
 
 	// 학번이 반복되도록 마지막 숫자가 출력된 후 0번째 인덱스로 되돌림
-	if (*index_of_stud_num % strlen(stud_num) == (strlen(stud_num) - 1)){
-		*index_of_stud_num = 0;
-	}
-
 	// 그 외에는 인덱스를 한 칸씩 뒤로 이동
-	else{
-		*index_of_stud_num += 1;
-	}
+	*index_of_stud_num = (*index_of_stud_num + 1) % strlen(stud_num);
 }
 
 int main()
