@@ -1,17 +1,17 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 
 int main()
 {
 	for (int i = 1; i <= 10; i++){
 
-		// 4¹øÂ°¿¡¼­ for Ãâ·Â ÁßÁö
+		// 4ë²ˆì§¸ì—ì„œ for ì¶œë ¥ ì¤‘ì§€
 		if (i == 4){
 			printf("\r\n");
 			//continue;
 			break;
 		}
 
-		// n¹øÂ° ÁÙ¿¡¼­ n°³ Ãâ·Â
+		// në²ˆì§¸ ì¤„ì—ì„œ nê°œ ì¶œë ¥
 		for (int j = 1; j <= i; j++){
 			printf("*");
 		}
@@ -23,14 +23,14 @@ int main()
 	int i = 1;
 	while (i <= 10){
 
-		// 4¹øÂ°¿¡¼­ º° Ãâ·Â ¾ÈÇÔ
+		// 4ë²ˆì§¸ì—ì„œ ë³„ ì¶œë ¥ ì•ˆí•¨
 		if (i == 4){
 			i++;
 			printf("\r\n");
 			continue;
 		}
 
-		// n¹øÂ° ÁÙ¿¡¼­ n°³ Ãâ·Â
+		// në²ˆì§¸ ì¤„ì—ì„œ nê°œ ì¶œë ¥
 		int j = 1;
 		while (j <= i){
 			printf("*");
