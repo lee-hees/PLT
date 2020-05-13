@@ -6,6 +6,27 @@ const int g_numRows = 10;
 const int g_numCols = 10;
 int g_iplayerx = 1;
 int g_iplayery = 1;
+int g_iScore = 0;
+
+void SetColor(WORD fore, WORD back)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	WORD attribute;
+	attribute = (back & 0x0f) << 4 | (fore & 0x0f);
+	SetConsoleTextAttribute(hConsole, attribute);
+
+	/** predefined flags
+	FOREGROUND_BLUE
+	FOREGROUND_GREEN
+	FOREGROUND_RED
+	FOREGROUND_INTENSITY
+	BACKGROUND_BLUE
+	BACKGROUND_GREEN
+	BACKGROUND_RED
+	BACKGROUND_INTENSITY
+	*/
+}
 
 void ShowConsoleCursor(bool showFlag)
 {
@@ -39,33 +60,61 @@ void DrawBoard(int board[g_numRows][g_numCols])
 	}
 }
 
+void DrawWall(int board[g_numRows][g_numCols])
+{
+	for (int r = 0; r < g_numRows; ++r) {
+		for (int c = 0; c < g_numCols; ++c) {
+			GotoXy(c, r);
+			if (board[r][c] == 1)
+				printf("#");
+		}
+	}
+}
+
 void DrawPlayer(int x, int y)
 {
 	GotoXy(x, y);
 	printf("P");
 }
 
-void main()
+void DrawScore()
+{
+	GotoXy(11, 0);
+	SetColor(15, 0);
+	printf("Score : %i", g_iScore);
+}
+
+int main()
 {
 	ShowConsoleCursor(false);
 
 	int board[g_numRows][g_numCols] = {
 		{ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 2, 1 },
+		{ 1, 0, 0, 2, 0, 0, 0, 0, 0, 1 },
 		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 1, 0, 0, 1, 1, 1, 1, 0, 0, 1 },
 		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+		{ 1, 0, 2, 0, 0, 0, 0, 0, 0, 1 },
+		{ 1, 0, 0, 0, 0, 0, 0, 2, 0, 1 },
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 	};
-
-	DrawBoard(board);
-	DrawPlayer(g_iplayerx, g_iplayery);
+	bool isScoreModified = true;
 
 	while (true) {
+		// draw scene
+		SetColor(15, 0);
+		DrawBoard(board);
+		SetColor(15, FOREGROUND_BLUE);
+		DrawWall(board);
+		SetColor(FOREGROUND_GREEN, 0);
+		DrawPlayer(g_iplayerx, g_iplayery);
+		if (isScoreModified == true)
+		{
+			DrawScore();
+		}
+
 		int tx = g_iplayerx;
 		int ty = g_iplayery;
 
@@ -89,13 +138,15 @@ void main()
 			break;
 
 		//if ("만약 (tx,ty)위치가 벽이 아니면") {
-		if (board[ty][tx] == 0) {
+		if (board[ty][tx] == 0 || board[ty][tx] == 2) {
 			g_iplayerx = tx;
 			g_iplayery = ty;
 		}
-
-		// draw scene
-		DrawBoard(board);
-		DrawPlayer(g_iplayerx, g_iplayery);
+		if (board[ty][tx] == 2)
+		{
+			g_iScore += 1;
+			board[ty][tx] = 0;
+			isScoreModified = true;
+		}
 	}
 }
