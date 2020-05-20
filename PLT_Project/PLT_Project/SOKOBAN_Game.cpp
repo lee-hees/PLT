@@ -43,12 +43,12 @@ void GotoXy(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
 }//GotoXy()
 
-void DrawBoard(int board[g_numRows][g_numCols])
+void DrawBoard(int board[g_numRows][g_numCols], int layer)
 {
 	for (int r = 0; r < g_numRows; ++r) {
 		for (int c = 0; c < g_numCols; ++c) {
 			GotoXy(c, r);
-			if (board[r][c] == 0)
+			if (board[r][c] == 0 && layer == 1)
 				printf(".");
 			else if (board[r][c] == 1)
 				printf("#");
@@ -59,17 +59,17 @@ void DrawBoard(int board[g_numRows][g_numCols])
 		}
 	}
 }
-
-void DrawWall(int board[g_numRows][g_numCols])
-{
-	for (int r = 0; r < g_numRows; ++r) {
-		for (int c = 0; c < g_numCols; ++c) {
-			GotoXy(c, r);
-			if (board[r][c] == 1)
-				printf("#");
-		}
-	}
-}
+//
+//void DrawWall(int board[g_numRows][g_numCols])
+//{
+//	for (int r = 0; r < g_numRows; ++r) {
+//		for (int c = 0; c < g_numCols; ++c) {
+//			GotoXy(c, r);
+//			if (board[r][c] == 1)
+//				printf("#");
+//		}
+//	}
+//}
 
 void DrawPlayer(int x, int y)
 {
@@ -89,25 +89,37 @@ int main()
 	ShowConsoleCursor(false);
 
 	int board[g_numRows][g_numCols] = {
-		{ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 2, 1 },
-		{ 1, 0, 0, 2, 0, 0, 0, 0, 0, 1 },
+		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 1, 0, 0, 1, 1, 1, 1, 0, 0, 1 },
 		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 2, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 2, 0, 1 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	};
+	int boardLayer2[g_numRows][g_numCols] = {
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 2, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 2, 2, 2, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	};
 	bool isScoreModified = true;
 
 	while (true) {
 		// draw scene
 		SetColor(15, 0);
-		DrawBoard(board);
+		DrawBoard(board, 1);
 		SetColor(15, FOREGROUND_BLUE);
-		DrawWall(board);
+		DrawBoard(boardLayer2, 2);
 		SetColor(FOREGROUND_GREEN, 0);
 		DrawPlayer(g_iplayerx, g_iplayery);
 		if (isScoreModified == true)
@@ -137,16 +149,25 @@ int main()
 		else if (ch == 27)
 			break;
 
+		if (boardLayer2[ty][tx] == 2)
+		{
+			int xoffset = tx - g_iplayerx;
+			int yoffset = ty - g_iplayery;
+			int xnew = tx + xoffset;
+			int ynew = ty + yoffset;
+			if (board[ynew][xnew] == 0 && boardLayer2[ynew][xnew] != 2)
+			{
+				boardLayer2[ty][tx] = 0;
+				boardLayer2[ynew][xnew] = 2;
+			}
+		}
+
 		//if ("만약 (tx,ty)위치가 벽이 아니면") {
-		if (board[ty][tx] == 0 || board[ty][tx] == 2) {
+		//if (board[ty][tx] == 0 || board[ty][tx] == 2) {
+		if (board[ty][tx] == 0 && boardLayer2[ty][tx] == 0) {
 			g_iplayerx = tx;
 			g_iplayery = ty;
 		}
-		if (board[ty][tx] == 2)
-		{
-			g_iScore += 1;
-			board[ty][tx] = 0;
-			isScoreModified = true;
-		}
+
 	}
 }
