@@ -1,6 +1,6 @@
 ﻿#include<stdio.h>
 #include<string.h>
-//#include<stdlib.h>
+#include<stdlib.h>
 
 struct People // 타입 정의
 {
@@ -16,12 +16,14 @@ struct People // 타입 정의
 // 위처럼 값으로 전달하지 말고 주소를 전달 해야한다.
 void printPeople( People* A )
 {
-	printf( "%-9s : %i\r\n", ( *A ).name, ( *A ).age );
+	//printf( "%-9s : %i\r\n", ( *A ).name, ( *A ).age );
+	printf( "%-9s : %i\r\n", A->name, A->age );
 }
 
 void add_age( People* A, int AGE )
 {
-	( *A ).age = AGE;
+	//( *A ).age = AGE;
+	A->age = AGE;
 }
 
 void change_name( People* A )
@@ -35,17 +37,24 @@ void main( )
 	a.age = 47;
 	strcpy_s( a.name, "hello" );
 	char*cp = ( char* )&a;
-	printf( "%c\r\n", cp[ 5 ] );
-
-	struct People b; // 구조체 b 선언
-	b.age = 50;
-	strcpy_s( b.name, "world" );
+	//printf( "%c\r\n", cp[ 5 ] );
 
 	printPeople( &a );
 	add_age( &a, a.age + 1 );
 	change_name( &a );
 	printPeople( &a );
-	//printPeople( b );
+
+	People* b; // 구조체 포인터 b 선언
+	b = ( People* )malloc( sizeof( People ) );
+	b->age = 50;
+	strcpy_s( b->name, "world" );
+
+	printPeople( b );
+	add_age( b, b->age + 1 );
+	change_name( b );
+	printPeople( b );
+
+	free( b );
 
 }
 
